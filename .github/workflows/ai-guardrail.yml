@@ -1,0 +1,43 @@
+name: check commit messages for AI
+# I supppose you could call it a NOT gate? If it passes, then it fails, if it fails, then passes? -M
+
+on:
+  pull_request:
+    branches: [main, testing, unstable]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+
+      - name: Run commit message check for CoPilot
+        uses: BetaTH13/check-commit@c3547d8f1720b91d41b4d45600cd9298061ecc9b
+        with:
+          keyword: "Copilot"
+          # optional defaults to false
+          require-all: "false"
+
+      - name: Run commit message check for Claude
+        uses: BetaTH13/check-commit@c3547d8f1720b91d41b4d45600cd9298061ecc9b
+        with:
+          keyword: "Claude"
+          # optional defaults to false
+          require-all: "false"
+
+      - name: Run commit message check for ChatGPT
+        uses: BetaTH13/check-commit@c3547d8f1720b91d41b4d45600cd9298061ecc9b
+        with:
+          keyword: "ChatGPT"
+          # optional defaults to false
+          require-all: "false"
